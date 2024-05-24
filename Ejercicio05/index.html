@@ -17,33 +17,47 @@
       // Se agrega el await para esperar esperar la promise
       let user = await response.json();
 
-      
+      // Recorre el JSON
       for (let i = 0; i < user.users.length; i++) {
+          // Se crea un objeto vacío
           let objeto = {};
 
+          // Se crea el manejador
           const manejador = {
+            // Para interceptar las asignaciones a un valor
             set(objetivo, propiedad, valor) {
+              // Si el usuario es aprendiz
               if(user.users[i].aprendiz === true){
+                // Si el nombre  son más de 2 palabras
                 if(user.users[i].name.split(" ").length > 2){
+                  // Si lleva en su nombre de usuario "ADSO"
                   if(/ADSO/.test(user.users[i].user)){
+                    // Si el valor de la propiedad no está en mayúscula
                     if (propiedad === "name" && !/^[A-Z\s]+$/.test(valor)) {
+                      // Manipula el valor
                       objetivo[propiedad] = valor.toUpperCase();
                     }
                     else{
+                      // No realiza ningún cambio
                       objetivo[propiedad] = valor;
                     }
                   } else{
+                    // No realiza ningún cambio
                     objetivo[propiedad] = valor;
                   }
                 } else{
+                  // No realiza ningún cambio
                   objetivo[propiedad] = valor;
                 }
               } else{
+                // No realiza ningún cambio
                 objetivo[propiedad] = valor;
               }
             }
           }
+          // Se instacia un Proxy 
           const proxy = new Proxy(objeto, manejador);
+          // Se le asigna a la propiedad nombre el valor del nombre del usuario del JSON
           proxy.name = user.users[i].name;
           console.log(proxy.name);
       }
