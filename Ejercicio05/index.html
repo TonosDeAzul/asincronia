@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 05</title>
+</head>
+
+<body>
+
+  <script>
+    (async () => {
+      // Lee el archivo JSON
+      let response = await fetch("user.json");
+      // Se le asigna a la variable user la respuesta que contiene el JSON
+      // Se agrega el await para esperar esperar la promise
+      let user = await response.json();
+
+      
+      for (let i = 0; i < user.users.length; i++) {
+          let objeto = {};
+
+          const manejador = {
+            set(objetivo, propiedad, valor) {
+              if(user.users[i].aprendiz === true){
+                if(user.users[i].name.split(" ").length > 2){
+                  if(/ADSO/.test(user.users[i].user)){
+                    if (propiedad === "name" && !/^[A-Z\s]+$/.test(valor)) {
+                      objetivo[propiedad] = valor.toUpperCase();
+                    }
+                    else{
+                      objetivo[propiedad] = valor;
+                    }
+                  } else{
+                    objetivo[propiedad] = valor;
+                  }
+                } else{
+                  objetivo[propiedad] = valor;
+                }
+              } else{
+                objetivo[propiedad] = valor;
+              }
+            }
+          }
+          const proxy = new Proxy(objeto, manejador);
+          proxy.name = user.users[i].name;
+          console.log(proxy.name);
+      }
+    })();
+  </script>
+
+</body>
+
+</html>

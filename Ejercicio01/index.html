@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 01</title>
+</head>
+
+<body>
+
+  <!-- <script>
+    // Función flecha para filtrar la coincidencia con "evaluacion"
+    const filtrar = x => x.name === "evaluacion";
+    (async () => {
+      // Lee el archivo JSON
+      let response = await fetch("user.json");
+      // Se le asigna a la variable user la respuesta que contiene el JSON
+      // Se agrega el await para esperar esperar la promise
+      let user = await response.json();
+
+      // Consultar el usuario de Github
+      let respuestaGithub = await fetch(`https://api.github.com/users/${user.name}/repos`);
+      // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+      // Se agrega el await para esperar esperar la promise
+      let usuarioGithub = await respuestaGithub.json();
+
+      // Imprime en consola los elemtos del usuarioGithub
+      // console.log(usuarioGithub);
+
+      // La función pasa por cada elemento del usuarioGithub e imprime unicamente aquellos que coincidan con "evaluacion"
+      usuarioGithub.forEach(element => {
+        if (element.name === "evaluacion") {
+          console.log(element);
+        };
+      });
+
+      // Callback del método filter a la función filtrar
+      let data = usuarioGithub.filter(filtrar);
+      console.log(data);
+    })();
+  </script> -->
+
+  <script>
+    // Función flecha para filtrar la coincidencia con "evaluacion"
+    const filtrar = x => x.name === "evaluacion";
+
+    // La promesa fetch solicita el "user.json"
+    fetch("user.json")
+      // Se obtiene la respuesta y se convierte en JSON
+      .then(response => response.json())
+      // El valor extraido se usa para construir la URL
+      .then(data => {
+        // La promesa fetch solicita la URL
+        fetch(`https://api.github.com/users/${data.name}/repos`)
+          // Se obtiene la respuesta y se convierte en JSON
+          .then(response => response.json())
+          // Extrae los datos del JSON 
+          .then(data => {
+            // La función pasa por cada elemento de la "data" e imprime unicamente aquellos que coincidan con "evaluacion"
+            data.forEach(element => {
+              if (element.name === "evaluacion") {
+                console.log(element);
+              };
+            });
+
+            // Callback del método filter a la función filtrar
+            let datos = data.filter(filtrar);
+            console.log(datos);
+          });
+      });
+
+  </script>
+
+</body>
+
+</html>

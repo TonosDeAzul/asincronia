@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 02</title>
+</head>
+
+<body>
+
+  <script>
+    // La promesa fetch solicita el "user.json"
+    fetch("user.json")
+      // Se obtiene la respuesta y se convierte en JSON
+      .then(response => response.json())
+      // El valor extraido se usa para luego construir la URL
+      .then(data => {
+        // Se declara la constante para almacenar los llamados a la API en un array
+        const promises = [];
+        // Se recorre los datos del JSON
+        for (let i = 0; i < data.users.length; i++) {
+          // Se suben los elementos de la llamada al array
+          promises.push(
+            // La promesa genera una solicitud a la URL
+            fetch(`https://api.github.com/users/${data.users[i].user}`)
+              // Se obtiene la respuesta y se convierte en JSON
+              .then(response => response.json())
+              // Los valores extraidos se usan para almancenarse en data2
+              .then(data2 => [data2.login, data2.avatar_url])
+          );
+        }
+        // Espera que todos elementos de la llamada se encuentren dentro del array para luego retornarlos
+        return Promise.all(promises);
+      })
+      // Usa los valores de data2 y los imprime en una tabla por consola
+      .then(data2 => {
+        console.table(data2);
+      })
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 04</title>
+</head>
+
+<body>
+
+  <script>
+
+    (async () => {
+      // Arreglo para unir todos los respositorios públicos de los aprendices
+      let cantidadRepo = [],
+        javascriptRepo = [],
+        ordenarRepo = [],
+        letrasRepo = [];
+      // Lee el archivo JSON
+      let response = await fetch("user.json");
+      // Se le asigna a la variable user la respuesta que contiene el JSON
+      // Se agrega el await para esperar esperar la promise
+      let user = await response.json();
+
+      // Itera a través del objeto "users" e ingresa a la propiedad "aprendiz"
+      for (let i = 0; i < user.users.length; i++) {
+        // Verifica si el rol del usuario aprendiz es activo
+        if (user.users[i].aprendiz === true) {
+          // console.log(user.users[i].user);
+          // Consultar los repositoriso de Github
+          let respuestaGithub = await fetch(`https://api.github.com/users/${user.users[i].user}/repos`);
+          // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+          let usuarioGithub = await respuestaGithub.json();
+          // Si el usuario tiene menos o 5 repositorios
+          // console.log(usuarioGithub.length)
+          if (usuarioGithub.length <= 5) {
+            // Se agregan los respositorios de cada aprendiz al arreglo
+            // console.log(usuarioGithub)
+            cantidadRepo.push(usuarioGithub);
+          }
+
+          // Regex para buscar la palabra JavaScript
+          let regex = new RegExp(/^JavaScript+$/ig);
+          // La función pasa por cada elemento de la "usuarioGithub" y agrega los repositorios que tengan en su nombre "JavaScript"
+          usuarioGithub.forEach(element => {
+            if (regex.test(element.name)) {
+              javascriptRepo.push(element);
+            };
+          });
+
+          // La función pasa por cada elemento de la "usuarioGithub" y agrega todos los respositorios
+          usuarioGithub.forEach(element => {
+            ordenarRepo.push(element.name);
+          });
+
+          // La función pasa por cada elemento de la "usuarioGithub" y agrega los repositorios que tengas más de 5 letras en su nombre
+          usuarioGithub.forEach(element => {
+            if(element.name.length > 5){
+              letrasRepo.push(element.name);
+            }
+          });
+
+        }
+      }
+      // Se imprimen los arreglos
+      // Quienes tiene menos o 5 repositorios
+      console.log("Menos o 5 repositorios");
+      console.log(cantidadRepo);
+      // Repositorios que contengan la palabra JavaScript
+      console.log("Contengan la palabra JavaScript");
+      console.log(javascriptRepo);
+      // Organizar repositorios en orden alfabético
+      console.log("Orden alfabético respositorios");
+      console.log(ordenarRepo.sort());
+      // Repositorios con más de 5 letras
+      console.log("Repositorios con más de 5 letras");
+      console.log(letrasRepo);
+    })();
+  </script>
+
+</body>
+
+</html>

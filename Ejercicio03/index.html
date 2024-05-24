@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 03</title>
+</head>
+
+<body>
+
+  <script>
+
+    (async () => {
+      // Arreglo para unir todos los respositorios públicos de los aprendices
+      let respositorioAprendices = [];
+      // Lee el archivo JSON
+      let response = await fetch("user.json");
+      // Se le asigna a la variable user la respuesta que contiene el JSON
+      // Se agrega el await para esperar esperar la promise
+      let user = await response.json();
+
+      // Itera a través del objeto "users" e ingresa a la propiedad "aprendiz"
+      for(let i = 0; i < user.users.length; i++){
+        // Verifica si el rol del usuario aprendiz es activo
+        if (user.users[i].aprendiz === true) {
+          // console.log(user.users[i].user);
+          // Consultar los repositoriso de Github
+          let respuestaGithub = await fetch(`https://api.github.com/users/${user.users[i].user}/repos`);
+          // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+          let usuarioGithub = await respuestaGithub.json();
+          // Se agregan los respositorios de cada aprendiz al arreglo
+          respositorioAprendices.push(usuarioGithub);
+          // console.log(usuarioGithub)
+        }
+      }
+      // Se imprime el arreglo
+      console.log(respositorioAprendices)
+    })();
+  </script>
+
+  <!-- <script>
+    fetch("user.json")
+      .then(response => response.json())
+      .then(data => {
+        let respositorioAprendices = [];
+        for (let i = 0; i < data.users.length; i++) {
+          // Verifica si el rol del usuario aprendiz es activo
+          if (data.users[i].aprendiz === true) {
+            // console.log(user.users[i].user);
+            // Consultar los repositoriso de Github
+            fetch(`https://api.github.com/users/${data.users[i].user}/repos`)
+              // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+              .then(response => response.json())
+              .then(data2 => {
+                respositorioAprendices.push(data2);
+              })
+          }
+        }
+        console.log(respositorioAprendices);
+      })
+  </script> -->
+
+</body>
+
+</html>
