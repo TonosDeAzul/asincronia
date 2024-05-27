@@ -10,53 +10,64 @@
 <body>
 
   <script>
-
+    // Expresión de función ejecutada inmediatamente (IIFE)
     (async () => {
-      // Arreglo para unir todos los respositorios públicos de los aprendices
+      // Se define un array vacío para el posterior almacenamiento de los repositorios
+      // los aprendices. 
       let respositorioAprendices = [];
-      // Lee el archivo JSON
+      // Realiza una solicitud fetch para obtener el archivo JSON "user.json"
+      // y espera ("await") hasta que la respuesta esté disponible.
       let response = await fetch("user.json");
-      // Se le asigna a la variable user la respuesta que contiene el JSON
-      // Se agrega el await para esperar esperar la promise
+      // Convierte la respuesta de "user.json" a formato JSON
+      // y espera ("await") hasta que la conversión esté completa.
       let user = await response.json();
-
-      // Itera a través del objeto "users" e ingresa a la propiedad "aprendiz"
+      // Itera sobre el array "users" dentro de "user".
       for(let i = 0; i < user.users.length; i++){
         // Verifica si el rol del usuario aprendiz es activo
         if (user.users[i].aprendiz === true) {
-          // console.log(user.users[i].user);
-          // Consultar los repositoriso de Github
+          // Realiza una solicitud fetch para obtener los repositorios del usuario de GitHub.
+          // "user.users[i].user" contiene el nombre de usuario de GitHub.
           let respuestaGithub = await fetch(`https://api.github.com/users/${user.users[i].user}/repos`);
-          // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+          // Convierte la respuesta de GitHub a formato JSON
+          // y espera ("await") hasta que la conversión esté completa.
           let usuarioGithub = await respuestaGithub.json();
-          // Se agregan los respositorios de cada aprendiz al arreglo
+          // Agrega los datos del usuario de GitHub al array 'respositorioAprendices'.
           respositorioAprendices.push(usuarioGithub);
-          // console.log(usuarioGithub)
         }
       }
-      // Se imprime el arreglo
+      // Imprime el array en la consola.
       console.log(respositorioAprendices)
     })();
   </script>
 
   <!-- <script>
+    // Realiza una solicitud fetch para obtener un archivo JSON llamado "user.json".
     fetch("user.json")
+    // Cuando la respuesta de la solicitud fetch se recibe, se convierte en formato JSON.
       .then(response => response.json())
+      // "data" contiene el JSON obtenido del archivo "user.json".
       .then(data => {
+        // Se define un array vacío para el posterior almacenamiento de los repositorios
+      // los aprendices. 
         let respositorioAprendices = [];
+        // Itera sobre el array "users" dentro de "data".
         for (let i = 0; i < data.users.length; i++) {
           // Verifica si el rol del usuario aprendiz es activo
           if (data.users[i].aprendiz === true) {
-            // console.log(user.users[i].user);
-            // Consultar los repositoriso de Github
+            // Realiza una solicitud fetch para obtener los repositorios del usuario de GitHub.
+            // "data.users[i].user" contiene el nombre de usuario de GitHub.
             fetch(`https://api.github.com/users/${data.users[i].user}/repos`)
-              // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+              // Cuando la respuesta de la solicitud fetch se recibe, se convierte en formato JSON.
               .then(response => response.json())
+              // "data2" contiene el JSON obtenido de la petición a la API 
+              // Extrae los respositorios de los aprendices.
               .then(data2 => {
+                // Agrega los datos del usuario de GitHub al array 'respositorioAprendices'.
                 respositorioAprendices.push(data2);
               })
           }
         }
+        // Imprime el array en la consola.
         console.log(respositorioAprendices);
       })
   </script> -->

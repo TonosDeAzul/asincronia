@@ -10,67 +10,68 @@
 <body>
 
   <!-- <script>
-    // Función flecha para filtrar la coincidencia con "evaluacion"
+    // Define una función flecha 'filtrar' que recibe un objeto 'x'
+    // y devuelve true si la propiedad 'name' de 'x' es igual a "evaluacion".
     const filtrar = x => x.name === "evaluacion";
+    // Expresión de función ejecutada inmediatamente (IIFE)
     (async () => {
-      // Lee el archivo JSON
+      // Realiza una solicitud fetch para obtener el archivo JSON "user.json"
+      // y espera ("await") hasta que la respuesta esté disponible.
       let response = await fetch("user.json");
-      // Se le asigna a la variable user la respuesta que contiene el JSON
-      // Se agrega el await para esperar esperar la promise
+      // Convierte la respuesta de "user.json" a formato JSON
+      // y espera ("await") hasta que la conversión esté completa.
       let user = await response.json();
-
-      // Consultar el usuario de Github
+      // Realiza una solicitud fetch a la API de GitHub para obtener los repositorios
+      // del usuario cuyo nombre está en "user.name", y espera ("await") hasta que la respuesta esté disponible.
       let respuestaGithub = await fetch(`https://api.github.com/users/${user.name}/repos`);
-      // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
-      // Se agrega el await para esperar esperar la promise
+      // Convierte la respuesta de GitHub a formato JSON y espera ("await") hasta que la conversión esté completa.
       let usuarioGithub = await respuestaGithub.json();
-
-      // Imprime en consola los elemtos del usuarioGithub
-      // console.log(usuarioGithub);
-
-      // La función pasa por cada elemento del usuarioGithub e imprime unicamente aquellos que coincidan con "evaluacion"
+      // Recorre cada elemento (repositorio) en "usuarioGithub".
       usuarioGithub.forEach(element => {
         if (element.name === "evaluacion") {
+          // Si el nombre del repositorio es "evaluacion", imprime el repositorio en la consola.
           console.log(element);
         };
       });
-
-      // Callback del método filter a la función filtrar
+      // Usa la función "filter" en "data" para obtener una lista de repositorios
+      // cuyo nombre es "evaluacion", utilizando la función "filtrar" definida anteriormente.
       let data = usuarioGithub.filter(filtrar);
+      // Imprime la lista filtrada en la consola.
       console.log(data);
     })();
   </script> -->
 
   <script>
-    // Función flecha para filtrar la coincidencia con "evaluacion"
+    // Define una función flecha "filtrar" que recibe un objeto "x" y
+    // Devuelve true si la propiedad "name" de "x" es igual a "evaluacion".
     const filtrar = x => x.name === "evaluacion";
-
-    // La promesa fetch solicita el "user.json"
+    // Realiza una solicitud fetch para obtener un archivo JSON llamado "user.json".
     fetch("user.json")
-      // Se obtiene la respuesta y se convierte en JSON
+      // Cuando la respuesta de la solicitud fetch se recibe, se convierte en formato JSON.
       .then(response => response.json())
-      // El valor extraido se usa para construir la URL
+      // "data" contiene el JSON obtenido del archivo "user.json".
       .then(data => {
-        // La promesa fetch solicita la URL
+        // Realiza una nueva solicitud fetch a la API de GitHub para obtener los repositorios
+        // del usuario cuyo nombre está almacenado en "data.name" (obtenido de "user.json").
         fetch(`https://api.github.com/users/${data.name}/repos`)
-          // Se obtiene la respuesta y se convierte en JSON
+          // Cuando la respuesta de esta solicitud se recibe, se convierte en formato JSON. 
           .then(response => response.json())
-          // Extrae los datos del JSON 
+          // "data" ahora contiene una lista de repositorios del usuario de GitHub.
           .then(data => {
-            // La función pasa por cada elemento de la "data" e imprime unicamente aquellos que coincidan con "evaluacion"
+            // Recorre cada elemento (repositorio) en "data".
             data.forEach(element => {
-              // Si el nombre del repostorio es evaluación
+              // Si el nombre del repositorio es "evaluacion", lo imprime en la consola.
               if (element.name === "evaluacion") {
                 console.log(element);
               };
             });
-
-            // Callback del método filter a la función filtrar
+            // Usa la función "filter" en "data" para obtener una lista de repositorios
+            // cuyo nombre es "evaluacion", utilizando la función "filtrar" definida anteriormente.
             let datos = data.filter(filtrar);
+            // Imprime la lista filtrada en la consola.
             console.log(datos);
           });
       });
-
   </script>
 
 </body>

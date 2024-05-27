@@ -10,31 +10,32 @@
 <body>
 
   <script>
-    // La promesa fetch solicita el "user.json"
+    // Realiza una solicitud fetch para obtener un archivo JSON llamado "user.json".
     fetch("user.json")
-      // Se obtiene la respuesta y se convierte en JSON
+      // Cuando la respuesta de la solicitud fetch se recibe, se convierte en formato JSON.
       .then(response => response.json())
-      // El valor extraido se usa para luego construir la URL
+      // "data" contiene el JSON obtenido del archivo "user.json".
       .then(data => {
-        // Se declara la constante para almacenar los llamados a la API en un array
+        // Define un array "promises" para almacenar las promesas de las solicitudes fetch a GitHub.
         const promises = [];
-        // Se recorre los datos del JSON
+        // Itera sobre el array "users" dentro de "data".
         for (let i = 0; i < data.users.length; i++) {
-          // Se suben los elementos de la llamada al array
           promises.push(
-            // La promesa genera una solicitud a la URL
+            // Realiza una nueva solicitud fetch a la API de GitHub para obtener los datos del usuario.
             fetch(`https://api.github.com/users/${data.users[i].user}`)
-              // Se obtiene la respuesta y se convierte en JSON
+            // Cuando la respuesta de la solicitud fetch se recibe, se convierte en formato JSON.
               .then(response => response.json())
-              // Los valores extraidos se usan para almancenarse en data2
+              // Extrae el nombre de usuario ('login') y la URL del avatar ('avatar_url') y los guarda en un array.
               .then(data2 => [data2.login, data2.avatar_url])
           );
         }
-        // Espera que todos elementos de la llamada se encuentren dentro del array para luego retornarlos
+        // Espera que todas las promesas en "promises" se resuelvan.
+        // Retorna una nueva promesa cuando ya se hayan resuelto todas las promesa.
         return Promise.all(promises);
       })
-      // Usa los valores de data2 y los imprime en una tabla por consola
+      // 'data2' es un array de arrays, donde cada elemento contiene el 'login' y 'avatar_url' de cada usuario de GitHub.
       .then(data2 => {
+        // Muestra "data2" en formato de tabla en la consola.
         console.table(data2);
       })
 

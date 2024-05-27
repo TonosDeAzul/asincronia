@@ -10,29 +10,29 @@
 <body>
 
   <script>
+    // Expresión de función ejecutada inmediatamente (IIFE)
     (async () => {
-      // Lee el archivo JSON
+      // Realiza una solicitud fetch para obtener el archivo JSON "user.json"
+      // y espera ("await") hasta que la respuesta esté disponible.
       let response = await fetch("user.json");
-      // Se le asigna a la variable user la respuesta que contiene el JSON
-      // Se agrega el await para esperar esperar la promise
+      // Convierte la respuesta de "user.json" a formato JSON
+      // y espera ("await") hasta que la conversión esté completa.
       let user = await response.json();
-
-      // Recorre el JSON
+      // Itera sobre el array "users" dentro de "user".
       for (let i = 0; i < user.users.length; i++) {
           // Se crea un objeto vacío
           let objeto = {};
-
-          // Se crea el manejador
+          // Se crea el manejador para el Proxy.
           const manejador = {
-            // Para interceptar las asignaciones a un valor
+            // Método "set" para interceptar las asignaciones a una propiedad del objeto.
             set(objetivo, propiedad, valor) {
               // Si el usuario es aprendiz
               if(user.users[i].aprendiz === true){
-                // Si el nombre  son más de 2 palabras
+                // Si el nombre del aprendiz son más de 2 palabras
                 if(user.users[i].name.split(" ").length > 2){
                   // Si lleva en su nombre de usuario "ADSO"
                   if(/ADSO/.test(user.users[i].user)){
-                    // Si el valor de la propiedad no está en mayúscula
+                    // Verifica si la propiedad es "name" y el valor no está en mayúsculas.
                     if (propiedad === "name" && !/^[A-Z\s]+$/.test(valor)) {
                       // Manipula el valor
                       objetivo[propiedad] = valor.toUpperCase();
@@ -55,10 +55,11 @@
               }
             }
           }
-          // Se instacia un Proxy 
+          // Se instancia un Proxy con el objeto vacío y el manejador.
           const proxy = new Proxy(objeto, manejador);
-          // Se le asigna a la propiedad nombre el valor del nombre del usuario del JSON
+          // Se le asigna a la propiedad nombre el valor del nombre del aprendiz del JSON.
           proxy.name = user.users[i].name;
+          // Imprime el valor de la propiedad "name" del Proxy en la consola.
           console.log(proxy.name);
       }
     })();

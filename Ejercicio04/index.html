@@ -10,51 +10,47 @@
 <body>
 
   <script>
-
+    // Expresión de función ejecutada inmediatamente (IIFE)
     (async () => {
-      // Arreglo para unir todos los respositorios públicos de los aprendices
-      let cantidadRepo = [],
-        javascriptRepo = [],
-        ordenarRepo = [],
-        letrasRepo = [];
-      // Lee el archivo JSON
+      // Arreglo para almacenar datos según lo requerido
+      let cantidadRepo = [], // Repositorios de usuarios con 5 o menos repositorios.
+        javascriptRepo = [], // Repositorios que contienen "JavaScript" en el nombre.
+        ordenarRepo = [], // Almacenar los nombres de todos los repositorios.
+        letrasRepo = []; // Repositorios con nombres que tienen más de 5 letras.
+      // Realiza una solicitud fetch para obtener el archivo JSON "user.json"
+      // y espera ("await") hasta que la respuesta esté disponible.
       let response = await fetch("user.json");
-      // Se le asigna a la variable user la respuesta que contiene el JSON
-      // Se agrega el await para esperar esperar la promise
+      // Convierte la respuesta de "user.json" a formato JSON
+      // y espera ("await") hasta que la conversión esté completa.
       let user = await response.json();
-
-      // Itera a través del objeto "users" e ingresa a la propiedad "aprendiz"
+      // Itera sobre el array "users" dentro de "user".
       for (let i = 0; i < user.users.length; i++) {
         // Verifica si el rol del usuario aprendiz es activo
         if (user.users[i].aprendiz === true) {
-          // console.log(user.users[i].user);
-          // Consultar los repositoriso de Github
+          // Realiza una solicitud fetch para obtener los repositorios del usuario de GitHub.
+          // "user.users[i].user" contiene el nombre de usuario de GitHub.
           let respuestaGithub = await fetch(`https://api.github.com/users/${user.users[i].user}/repos`);
-          // Se le asigna a la variable usuarioGithub la respuesta que contiene el JSON
+          // Convierte la respuesta de GitHub a formato JSON
+          // y espera ("await") hasta que la conversión esté completa.
           let usuarioGithub = await respuestaGithub.json();
-          // Si el usuario tiene menos o 5 repositorios
-          // console.log(usuarioGithub.length)
+          // Verifica si el usuario tiene 5 o menos repositorios.
           if (usuarioGithub.length <= 5) {
-            // Se agregan los respositorios de cada aprendiz al arreglo
-            // console.log(usuarioGithub)
+            // Agrega los repositorios del usuario al arreglo "cantidadRepo".
             cantidadRepo.push(usuarioGithub);
           }
-
-          // Regex para buscar la palabra JavaScript
+          // Expresión regular para buscar la palabra "JavaScript" en el nombre de los repositorios.
           let regex = new RegExp(/^JavaScript+$/ig);
-          // La función pasa por cada elemento de la "usuarioGithub" y agrega los repositorios que tengan en su nombre "JavaScript"
+          // Recorre cada repositorio del usuario y agrega los que contengan "JavaScript" en el nombre a "javascriptRepo".
           usuarioGithub.forEach(element => {
             if (regex.test(element.name)) {
               javascriptRepo.push(element);
             };
           });
-
-          // La función pasa por cada elemento de la "usuarioGithub" y agrega todos los respositorios
+          // Recorre cada repositorio del usuario y agrega los nombres de todos los repositorios a "ordenarRepo".
           usuarioGithub.forEach(element => {
             ordenarRepo.push(element.name);
           });
-
-          // La función pasa por cada elemento de la "usuarioGithub" y agrega los repositorios que tengas más de 5 letras en su nombre
+          // Recorre cada repositorio del usuario y agrega los nombres de repositorios que tengan más de 5 letras a "letrasRepo".
           usuarioGithub.forEach(element => {
             if(element.name.length > 5){
               letrasRepo.push(element.name);
@@ -63,17 +59,17 @@
 
         }
       }
-      // Se imprimen los arreglos
-      // Quienes tiene menos o 5 repositorios
+      // Imprime los arreglos resultantes en la consola.
+      // Imprime repositorios de usuarios con 5 o menos repositorios.
       console.log("Menos o 5 repositorios");
       console.log(cantidadRepo);
-      // Repositorios que contengan la palabra JavaScript
+      // Imprime repositorios que contienen la palabra "JavaScript".
       console.log("Contengan la palabra JavaScript");
       console.log(javascriptRepo);
-      // Organizar repositorios en orden alfabético
+      // Imprime todos los nombres de repositorios en orden alfabético.
       console.log("Orden alfabético respositorios");
       console.log(ordenarRepo.sort());
-      // Repositorios con más de 5 letras
+      // Imprime los nombres de repositorios con más de 5 letras.
       console.log("Repositorios con más de 5 letras");
       console.log(letrasRepo);
     })();
